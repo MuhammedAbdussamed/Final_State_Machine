@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     [SerializeField] private InputActionReference movementInputs;
     [SerializeField] private InputActionReference jumpInputs;
+    [SerializeField] private GameObject raycastObject;
     [SerializeField] private Animator animator;
 
     [Header("Components")]
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Variables")]
     [SerializeField] private float fallMultiplier;  //  Yerçekiminin karakter üzerinde ki etkisi.
+    [SerializeField] private LayerMask layerMask;
     private Vector3 moveDirection;
     public bool isJumping;
     public bool isGrounded;
@@ -46,6 +48,7 @@ public class PlayerController : MonoBehaviour
     {
         Walk();
         Jump();
+        CheckGround();
     }
 
     #region Functions
@@ -75,6 +78,23 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
         }
+    }
+
+    private void CheckGround()
+    {
+        Ray ray = new Ray(raycastObject.transform.position, Vector3.down); // Ray'ler tek başına bir uzunluk bilgisi taşımazlar. Sadece bir başlangıç noktası ve yön.
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 0.1f, layerMask))
+        {
+            isGrounded = true;
+        }
+
+        else
+        {
+            isGrounded = false;
+        }
+        Debug.Log(isGrounded);
     }
     
     #endregion
